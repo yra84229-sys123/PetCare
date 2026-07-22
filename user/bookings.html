@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bookings | PawBuddy</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="view-transition" content="same-origin">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo">
+          <span class="logo-paw"><i class="fas fa-paw"></i></span> PawBuddy
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a href="dashboard.html" class="sidebar-link">
+            <i class="fas fa-home"></i> Home
+          </a>
+        </li>
+        <li>
+          <a href="../services.html" class="sidebar-link">
+            <i class="fas fa-concierge-bell"></i> Available Services
+          </a>
+        </li>
+        <li>
+          <a href="bookings.html" class="sidebar-link active">
+            <i class="fas fa-calendar-alt"></i> My Bookings
+          </a>
+        </li>
+        <li>
+          <a href="profile.html" class="sidebar-link">
+            <i class="fas fa-user-circle"></i> My Profile
+          </a>
+        </li>
+        <li style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+          <a href="../index.html" class="sidebar-link">
+            <i class="fas fa-globe"></i> Back to Website
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#" class="sidebar-logout" onclick="PetCareDB.auth.logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="btn-icon dashboard-hamburger" id="dashboardHamburger"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1 style="font-size: 28px; font-weight: 800; color: var(--primary);">My Bookings</h1>
+            <p style="color: var(--text-muted); font-size: 14px;">View your past and upcoming appointments, and book new services.</p>
+          </div>
+        </div>
+        <button class="btn-primary" id="btnBookService">
+          <i class="fas fa-plus"></i> Book Service
+        </button>
+      </header>
+
+      <!-- Panel holding Table & Filters -->
+      <section class="dashboard-panel">
+        <div class="panel-header">
+          <div class="action-bar">
+            <!-- Search field -->
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="text" id="myBookingSearchInput" class="form-control" placeholder="Search appointments...">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Pet Name</th>
+                <th>Service</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="myBookingsTableBody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Create Appointment Modal -->
+  <div class="modal" id="bookServiceModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="bookServiceModalTitle">Request Appointment</h3>
+        <button class="modal-close" id="btnCloseServiceModal">&times;</button>
+      </div>
+      <form id="bookServiceForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="bookPet">Select Pet *</label>
+            <select id="bookPet" class="form-control" required>
+              <!-- Loaded dynamically -->
+            </select>
+            <small style="display:block; margin-top:5px; color:var(--text-muted);">
+              Don't see your pet? <a href="profile.html">Update your profile</a> to add pets.
+            </small>
+          </div>
+
+          <div class="modal-grid-2">
+            <!-- Service Selection -->
+            <div class="form-group">
+              <label for="bookService">Service *</label>
+              <select id="bookService" class="form-control" required>
+                <option value="" disabled selected>Select Service</option>
+                <option value="Physical Exam">Physical Exam</option>
+                <option value="Dental Care">Dental Care</option>
+                <option value="Flea and Tick Control">Flea and Tick Control</option>
+                <option value="Pet Nutrition">Pet Nutrition</option>
+                <option value="Pet Food">Pet Food</option>
+                <option value="Pet Accessories">Pet Accessories</option>
+                <option value="Health Products">Health Products</option>
+                <option value="Pet Adoption">Pet Adoption</option>
+                <option value="Training Supplies">Training Supplies</option>
+                <option value="Pet Grooming">Pet Grooming</option>
+                <option value="Warm Bathing">Warm Bathing</option>
+                <option value="Pet Vaccination">Pet Vaccination</option>
+                <option value="Pet Boarding">Pet Boarding</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-grid-2">
+            <!-- Date Selection -->
+            <div class="form-group">
+              <label for="bookDate">Appointment Date *</label>
+              <input type="date" id="bookDate" class="form-control" required>
+            </div>
+            
+            <!-- Time Selection -->
+            <div class="form-group">
+              <label for="bookTime">Appointment Time *</label>
+              <input type="time" id="bookTime" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bookNotes">Additional Notes</label>
+            <textarea id="bookNotes" class="form-control" rows="3" placeholder="Enter special requests, allergies, behavioral notes, etc."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" id="btnCancelBook" style="padding: 8px 24px;">Cancel</button>
+          <button type="submit" class="btn-primary" style="padding: 8px 24px;">Confirm Booking</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/firebase.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const user = await PetCareDB.auth.checkSession(["user", "admin"]);
+      if (!user) return;
+
+      const owners = await PetCareDB.owners.getAll();
+      const currentOwner = owners.find(o => o.email.toLowerCase() === user.email.toLowerCase());
+      
+      const myBookingsTableBody = document.getElementById("myBookingsTableBody");
+      const searchInput = document.getElementById("myBookingSearchInput");
+      const bookModal = document.getElementById("bookServiceModal");
+      const bookForm = document.getElementById("bookServiceForm");
+      
+      async function renderMyBookings() {
+        if (!currentOwner) {
+          myBookingsTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px 0;">Please complete your profile first to view bookings.</td></tr>`;
+          return;
+        }
+
+        const allBookings = await PetCareDB.bookings.getAll();
+        const myBookings = allBookings.filter(b => b.ownerId === currentOwner.id);
+        const allPets = await PetCareDB.pets.getAll();
+        const pets = allPets.filter(p => p.ownerId === currentOwner.id);
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+
+        myBookingsTableBody.innerHTML = "";
+
+        const filtered = myBookings.filter(b => {
+          const serviceName = b.service.toLowerCase();
+          const pet = pets.find(p => p.id === b.petId);
+          const petName = pet ? pet.name.toLowerCase() : "";
+          return serviceName.includes(searchTerm) || petName.includes(searchTerm) || b.id.toLowerCase().includes(searchTerm);
+        });
+
+        if (filtered.length === 0) {
+          myBookingsTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px 0;">No bookings found.</td></tr>`;
+          return;
+        }
+
+        filtered.sort((a,b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time));
+
+        filtered.forEach(b => {
+          const pet = pets.find(p => p.id === b.petId);
+          let badgeClass = "badge-pending";
+          if (b.status === "Confirmed") badgeClass = "badge-confirmed";
+          if (b.status === "Completed") badgeClass = "badge-completed";
+          if (b.status === "Cancelled") badgeClass = "badge-cancelled";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong style="color: var(--primary);">${b.id}</strong></td>
+            <td><strong>${pet ? pet.name : 'Unknown Pet'}</strong></td>
+            <td><span class="badge" style="background-color: var(--bg-light); color: var(--primary); font-weight:600;">${b.service}</span></td>
+            <td>${b.date} ${b.time}</td>
+            <td><span class="badge ${badgeClass}">${b.status}</span></td>
+            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${b.notes || ''}">
+              ${b.notes || '<span style="color:var(--text-muted); font-style:italic;">None</span>'}
+            </td>
+            <td class="table-actions">
+              ${(b.status === 'Pending' || b.status === 'Confirmed') ? `
+                <button class="btn-icon delete btn-cancel-booking" data-id="${b.id}" title="Cancel Booking"><i class="fas fa-times-circle"></i> Cancel</button>
+              ` : ''}
+            </td>
+          `;
+          myBookingsTableBody.appendChild(tr);
+        });
+
+        // Cancel booking listeners
+        document.querySelectorAll(".btn-cancel-booking").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            if (confirm("Are you sure you want to cancel this booking?")) {
+              const b = await PetCareDB.bookings.getById(btn.dataset.id);
+              if (b) {
+                b.status = "Cancelled";
+                await PetCareDB.bookings.update(b.id, b);
+                await renderMyBookings();
+                if (window.showToast) window.showToast("Booking cancelled successfully!");
+                else alert("Booking cancelled successfully!");
+              }
+            }
+          });
+        });
+      }
+
+      // Initial render
+      await renderMyBookings();
+      if (searchInput) searchInput.addEventListener("input", renderMyBookings);
+
+      // Book Service flow
+      const btnBookService = document.getElementById("btnBookService");
+      if (btnBookService) {
+        btnBookService.addEventListener("click", async () => {
+          if (!currentOwner) {
+            alert("Please update your profile information first before booking an appointment.");
+            window.location.href = "profile.html";
+            return;
+          }
+
+          const allPets = await PetCareDB.pets.getAll();
+          const myPets = allPets.filter(p => p.ownerId === currentOwner.id);
+          const bookPetDropdown = document.getElementById("bookPet");
+          bookPetDropdown.innerHTML = '<option value="" disabled selected>Select Pet</option>';
+          
+          if (myPets.length === 0) {
+            bookPetDropdown.innerHTML = '<option value="" disabled selected>No pets found. Please update profile.</option>';
+          } else {
+            myPets.forEach(p => {
+              bookPetDropdown.innerHTML += `<option value="${p.id}">${p.name} (${p.species})</option>`;
+            });
+          }
+
+          bookForm.reset();
+          
+          // default tomorrow
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          document.getElementById("bookDate").value = tomorrow.toISOString().split('T')[0];
+          document.getElementById("bookTime").value = "09:00";
+
+          bookModal.classList.add("active");
+        });
+      }
+
+      // Close modals
+      const closeModals = () => { if (bookModal) bookModal.classList.remove("active"); }
+      document.getElementById("btnCloseServiceModal")?.addEventListener("click", closeModals);
+      document.getElementById("btnCancelBook")?.addEventListener("click", closeModals);
+
+      if (bookForm) {
+        bookForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (!currentOwner) return;
+
+          const data = {
+            ownerId: currentOwner.id,
+            petId: document.getElementById("bookPet").value,
+            service: document.getElementById("bookService").value,
+            date: document.getElementById("bookDate").value,
+            time: document.getElementById("bookTime").value,
+            status: "Pending",
+            notes: document.getElementById("bookNotes").value.trim()
+          };
+
+          try {
+            await PetCareDB.bookings.create(data);
+            if (window.showToast) window.showToast("Booking request sent successfully!");
+            else alert("Booking request sent successfully!");
+            closeModals();
+            await renderMyBookings();
+          } catch (err) {
+            alert(err.message);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

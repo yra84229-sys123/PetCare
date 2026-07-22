@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | PawBuddy</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="view-transition" content="same-origin">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo">
+          <span class="logo-paw"><i class="fas fa-paw"></i></span> PawBuddy
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a href="dashboard.html" class="sidebar-link">
+            <i class="fas fa-home"></i> Home
+          </a>
+        </li>
+        <li>
+          <a href="../services.html" class="sidebar-link">
+            <i class="fas fa-concierge-bell"></i> Available Services
+          </a>
+        </li>
+        <li>
+          <a href="bookings.html" class="sidebar-link">
+            <i class="fas fa-calendar-alt"></i> My Bookings
+          </a>
+        </li>
+        <li>
+          <a href="profile.html" class="sidebar-link active">
+            <i class="fas fa-user-circle"></i> My Profile
+          </a>
+        </li>
+        <li style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+          <a href="../index.html" class="sidebar-link">
+            <i class="fas fa-globe"></i> Back to Website
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#" class="sidebar-logout" onclick="PetCareDB.auth.logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="btn-icon dashboard-hamburger" id="dashboardHamburger"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1 style="font-size: 28px; font-weight: 800; color: var(--primary);">My Profile</h1>
+            <p style="color: var(--text-muted); font-size: 14px;">Update your personal details and manage your registered pets.</p>
+          </div>
+        </div>
+      </header>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;" class="cards-grid-3">
+        <!-- Personal Information Section -->
+        <section class="dashboard-panel">
+          <div class="panel-header">
+            <h2>Personal Information</h2>
+          </div>
+          <form id="profileForm">
+            <div class="form-group">
+              <label for="ownerName">Full Name *</label>
+              <input type="text" id="ownerName" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="ownerEmail">Email Address (Login)</label>
+              <input type="email" id="ownerEmail" class="form-control" disabled>
+            </div>
+            <div class="form-group">
+              <label for="ownerPhone">Phone Number *</label>
+              <input type="tel" id="ownerPhone" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="ownerAddress">Address *</label>
+              <textarea id="ownerAddress" class="form-control" rows="3" required></textarea>
+            </div>
+            <div style="margin-top: 20px;">
+              <button type="submit" class="btn-primary">Save Profile Changes</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Manage Pets Section -->
+        <section class="dashboard-panel">
+          <div class="panel-header">
+            <h2>My Pets</h2>
+            <button class="btn-primary" id="btnAddPet" style="padding: 6px 12px; font-size: 13px;">
+              <i class="fas fa-plus"></i> Add Pet
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pet Details</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="myPetsTableBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create Pet Modal -->
+  <div class="modal" id="petModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="petModalTitle">Register New Pet</h3>
+        <button class="modal-close" id="btnClosePetModal">&times;</button>
+      </div>
+      <form id="petForm">
+        <div class="modal-body">
+          <input type="hidden" id="petId">
+          
+          <div class="form-group">
+            <label for="petName">Pet Name *</label>
+            <input type="text" id="petName" class="form-control" required>
+          </div>
+
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label for="petSpecies">Species *</label>
+              <select id="petSpecies" class="form-control" required>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Bird">Bird</option>
+                <option value="Rabbit">Rabbit</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="petBreed">Breed</label>
+              <input type="text" id="petBreed" class="form-control" placeholder="e.g. Golden Retriever">
+            </div>
+          </div>
+
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label for="petAge">Age (Years) *</label>
+              <input type="number" id="petAge" class="form-control" min="0" max="30" step="0.1" required>
+            </div>
+
+            <div class="form-group">
+              <label for="petGender">Gender *</label>
+              <select id="petGender" class="form-control" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Unknown">Unknown</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="petWeight">Weight (kg) *</label>
+            <input type="number" id="petWeight" class="form-control" min="0" step="0.1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" id="btnCancelPet" style="padding: 8px 24px;">Cancel</button>
+          <button type="submit" class="btn-primary" style="padding: 8px 24px;">Save Pet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/firebase.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const user = await PetCareDB.auth.checkSession(["user", "admin"]);
+      if (!user) return;
+
+      const owners = await PetCareDB.owners.getAll();
+      let currentOwner = owners.find(o => o.email.toLowerCase() === user.email.toLowerCase());
+
+      const profileForm = document.getElementById("profileForm");
+      const nameInput = document.getElementById("ownerName");
+      const emailInput = document.getElementById("ownerEmail");
+      const phoneInput = document.getElementById("ownerPhone");
+      const addressInput = document.getElementById("ownerAddress");
+
+      // Set initial email
+      emailInput.value = user.email;
+
+      // Populate form if owner profile exists
+      if (currentOwner) {
+        nameInput.value = currentOwner.name;
+        phoneInput.value = currentOwner.phone;
+        addressInput.value = currentOwner.address;
+      } else {
+        nameInput.value = user.name;
+      }
+
+      // Save Profile
+      profileForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const data = {
+          name: nameInput.value.trim(),
+          phone: phoneInput.value.trim(),
+          email: user.email,
+          address: addressInput.value.trim()
+        };
+
+        try {
+          if (currentOwner) {
+            await PetCareDB.owners.update(currentOwner.id, data);
+            alert("Profile updated successfully!");
+          } else {
+            currentOwner = await PetCareDB.owners.create(data);
+            alert("Profile created successfully!");
+            await renderMyPets(); // Refresh UI to allow adding pets
+          }
+        } catch (err) {
+          alert(err.message);
+        }
+      });
+
+      // Manage Pets
+      const myPetsTableBody = document.getElementById("myPetsTableBody");
+      const btnAddPet = document.getElementById("btnAddPet");
+      const petModal = document.getElementById("petModal");
+      const petForm = document.getElementById("petForm");
+
+      async function renderMyPets() {
+        if (!currentOwner) {
+          myPetsTableBody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 20px 0;">Please complete your personal information to add pets.</td></tr>`;
+          btnAddPet.style.display = "none";
+          return;
+        }
+        
+        btnAddPet.style.display = "inline-block";
+        const allPets = await PetCareDB.pets.getAll();
+        const myPets = allPets.filter(p => p.ownerId === currentOwner.id);
+        myPetsTableBody.innerHTML = "";
+
+        if (myPets.length === 0) {
+          myPetsTableBody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 20px 0;">No pets found. Click 'Add Pet' to register one.</td></tr>`;
+          return;
+        }
+
+        myPets.forEach(p => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <img src="${p.photo || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100'}" alt="Pet" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                <div>
+                  <strong style="color:var(--primary);">${p.name}</strong><br>
+                  <small style="color:var(--text-muted);">${p.species} • ${p.breed} • ${p.age} yrs • ${p.weight} kg</small>
+                </div>
+              </div>
+            </td>
+            <td class="table-actions">
+              <button class="btn-icon edit btn-edit-pet" data-id="${p.id}" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+              <button class="btn-icon delete btn-delete-pet" data-id="${p.id}" title="Delete"><i class="fas fa-trash-alt"></i></button>
+            </td>
+          `;
+          myPetsTableBody.appendChild(tr);
+        });
+
+        // Edit/Delete Listeners
+        document.querySelectorAll(".btn-edit-pet").forEach(btn => {
+          btn.addEventListener("click", () => openEditPet(btn.dataset.id));
+        });
+        document.querySelectorAll(".btn-delete-pet").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            if (confirm("Are you sure you want to delete this pet? Active bookings will prevent deletion.")) {
+              try {
+                await PetCareDB.pets.delete(btn.dataset.id);
+                await renderMyPets();
+                alert("Pet deleted.");
+              } catch (err) {
+                alert(err.message);
+              }
+            }
+          });
+        });
+      }
+
+      await renderMyPets();
+
+      // Pet Modal Controls
+      btnAddPet.addEventListener("click", () => {
+        petForm.reset();
+        document.getElementById("petId").value = "";
+        document.getElementById("petModalTitle").textContent = "Register New Pet";
+        petModal.classList.add("active");
+      });
+
+      const closePetModal = () => petModal.classList.remove("active");
+      document.getElementById("btnClosePetModal").addEventListener("click", closePetModal);
+      document.getElementById("btnCancelPet").addEventListener("click", closePetModal);
+
+      // Pet Form Submit
+      petForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const id = document.getElementById("petId").value;
+        const data = {
+          name: document.getElementById("petName").value.trim(),
+          species: document.getElementById("petSpecies").value,
+          breed: document.getElementById("petBreed").value.trim() || "Unknown",
+          age: document.getElementById("petAge").value,
+          gender: document.getElementById("petGender").value,
+          weight: document.getElementById("petWeight").value,
+          ownerId: currentOwner.id,
+          photo: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=300" // default for users
+        };
+
+        try {
+          if (id) {
+            const petObj = await PetCareDB.pets.getById(id);
+            await PetCareDB.pets.update(id, Object.assign(petObj, data));
+          } else {
+            await PetCareDB.pets.create(data);
+          }
+          closePetModal();
+          await renderMyPets();
+          alert("Pet details saved!");
+        } catch (err) {
+          alert(err.message);
+        }
+      });
+
+      async function openEditPet(id) {
+        const p = await PetCareDB.pets.getById(id);
+        if (!p) return;
+        document.getElementById("petId").value = p.id;
+        document.getElementById("petName").value = p.name;
+        document.getElementById("petSpecies").value = p.species;
+        document.getElementById("petBreed").value = p.breed;
+        document.getElementById("petAge").value = p.age;
+        document.getElementById("petGender").value = p.gender;
+        document.getElementById("petWeight").value = p.weight;
+        document.getElementById("petModalTitle").textContent = "Edit Pet Details";
+        petModal.classList.add("active");
+      }
+    });
+  </script>
+</body>
+</html>

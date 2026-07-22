@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Owners | Admin Dashboard</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="view-transition" content="same-origin">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo">
+          <span class="logo-paw"><i class="fas fa-paw"></i></span> PawBuddy
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a href="dashboard.html" class="sidebar-link">
+            <i class="fas fa-chart-line"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="pets.html" class="sidebar-link">
+            <i class="fas fa-dog"></i> Manage Pets
+          </a>
+        </li>
+        <li>
+          <a href="owners.html" class="sidebar-link active">
+            <i class="fas fa-users"></i> Manage Owners
+          </a>
+        </li>
+        <li>
+          <a href="bookings.html" class="sidebar-link">
+            <i class="fas fa-calendar-alt"></i> Manage Bookings
+          </a>
+        </li>
+        <li>
+          <a href="messages.html" class="sidebar-link">
+            <i class="fas fa-envelope"></i> View Messages
+          </a>
+        </li>
+        <li>
+          <a href="users.html" class="sidebar-link">
+            <i class="fas fa-user-shield"></i> Manage Users
+          </a>
+        </li>
+        <li style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+          <a href="../index.html" class="sidebar-link">
+            <i class="fas fa-globe"></i> Back to Website
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#" class="sidebar-logout" onclick="PetCareDB.auth.logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="btn-icon dashboard-hamburger" id="dashboardHamburger"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1 style="font-size: 28px; font-weight: 800; color: var(--primary);">Manage Owner Records</h1>
+            <p style="color: var(--text-muted); font-size: 14px;">Register and update customer contact details and view their registered pets.</p>
+          </div>
+        </div>
+        <button class="btn-primary" id="btnAddOwner">
+          <i class="fas fa-plus"></i> Add Owner
+        </button>
+      </header>
+
+      <!-- Panel holding Table & Filter -->
+      <section class="dashboard-panel">
+        <div class="panel-header">
+          <div class="action-bar">
+            <!-- Search field -->
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="text" id="ownerSearchInput" class="form-control" placeholder="Search owners by name, phone, or email...">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Owner ID</th>
+                <th>Full Name</th>
+                <th>Phone Number</th>
+                <th>Email Address</th>
+                <th>Home Address</th>
+                <th>Pets Registered</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ownersTableBody">
+              <!-- Loaded dynamically by owners.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Create & Update Modal -->
+  <div class="modal" id="ownerModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="ownerModalTitle">Add New Owner</h3>
+        <button class="modal-close" id="btnCloseModal">&times;</button>
+      </div>
+      <form id="ownerForm">
+        <div class="modal-body">
+          <input type="hidden" id="ownerId">
+          
+          <div class="form-group">
+            <label for="ownerName">Full Name *</label>
+            <input type="text" id="ownerName" class="form-control" placeholder="e.g. Emily Watson" required>
+          </div>
+
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label for="ownerPhone">Phone Number *</label>
+              <input type="tel" id="ownerPhone" class="form-control" placeholder="e.g. 555-0123" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="ownerEmail">Email Address *</label>
+              <input type="email" id="ownerEmail" class="form-control" placeholder="e.g. emily@gmail.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ownerAddress">Home Address *</label>
+            <input type="text" id="ownerAddress" class="form-control" placeholder="e.g. 123 Maple Street, New York" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" id="btnCancelOwner" style="padding: 8px 24px;">Cancel</button>
+          <button type="submit" class="btn-primary" style="padding: 8px 24px;">Save Owner</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script Modules -->
+  <script src="../js/firebase.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/owners.js"></script>
+</body>
+</html>

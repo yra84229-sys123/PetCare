@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Login | PawBuddy</title>
+  <meta name="description" content="Secure login for Admin and Staff members of PawBuddy Pet Care Booking.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .login-body {
+      background-color: #f0f7ff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+    }
+
+    .login-bg-decor {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 35vw;
+      background-color: #e3f0fe;
+      z-index: 0;
+    }
+
+    .left-decor {
+      left: 0;
+      border-radius: 0 40% 40% 0 / 0 50% 50% 0;
+    }
+
+    .right-decor {
+      right: 0;
+      border-radius: 40% 0 0 40% / 50% 0 0 50%;
+    }
+
+    .login-page-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      width: 100%;
+    }
+
+    .login-top-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .login-top-logo .logo-paw {
+      font-size: 32px;
+      color: #1a2b49;
+    }
+
+    .login-top-logo .logo-text-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .login-top-logo .main-logo-text {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a2b49;
+      line-height: 1.1;
+    }
+
+    .login-top-logo .sub-logo-text {
+      font-size: 13px;
+      color: #4a5568;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .login-card {
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 420px;
+      padding: 48px;
+      border: none;
+    }
+
+    .login-card h2 {
+      font-size: 28px;
+      text-align: center;
+      font-weight: 800;
+      color: #1a2b49;
+      margin-bottom: 8px;
+    }
+
+    .login-card p.login-subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 36px;
+      font-size: 14px;
+    }
+
+    .login-card .form-group {
+      margin-bottom: 24px;
+    }
+
+    .login-card label {
+      font-weight: 700;
+      color: #1a2b49;
+      margin-bottom: 8px;
+      font-size: 13px;
+      display: block;
+    }
+
+    .login-card .form-control {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .login-card .form-control:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+      outline: none;
+    }
+
+    .password-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .password-header label {
+      margin-bottom: 0;
+    }
+
+    .forgot-link {
+      font-size: 13px;
+      color: #1a73e8;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .toggle-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9aa0a6;
+      cursor: pointer;
+    }
+
+    .login-btn {
+      background-color: #1a73e8;
+      border-radius: 6px;
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      justify-content: center;
+      margin-top: 8px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .login-btn:hover {
+      background-color: #1557b0;
+    }
+
+    .register-prompt {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .register-prompt a {
+      color: #1a73e8;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-dog {
+      position: absolute;
+      bottom: -40px;
+      left: -20px;
+      height: 45vh;
+      z-index: 10;
+    }
+
+    .login-cat {
+      position: absolute;
+      bottom: -40px;
+      right: -20px;
+      height: 40vh;
+      z-index: 10;
+    }
+
+    @media (max-width: 768px) {
+      .login-card {
+        padding: 24px;
+        margin: 0 16px;
+      }
+      .login-bg-decor {
+        display: none;
+      }
+      .login-page-wrapper {
+        padding: 0 16px;
+      }
+    }
+  </style>
+  <meta name="view-transition" content="same-origin">
+</head>
+
+<body class="login-body">
+
+  <div class="login-bg-decor left-decor"></div>
+  <div class="login-bg-decor right-decor"></div>
+
+  <div class="login-page-wrapper">
+    <!-- Top Logo -->
+    <div class="login-top-logo">
+      <div class="logo-text-block">
+      
+      </div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <h2>Login</h2>
+      <p class="login-subtitle">Welcome back! Please login to your account.</p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group" style="position: relative;">
+          <div class="password-header">
+            <label for="password">Password</label>
+            <a href="#" class="forgot-link">Forgot Password?</a>
+          </div>
+          <div style="position: relative;">
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+            <i class="far fa-eye-slash toggle-pw"></i>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary login-btn">Login</button>
+
+        <div style="display: flex; align-items: center; margin: 20px 0;">
+          <hr style="flex-grow: 1; border: none; border-top: 1px solid #e2e8f0;">
+          <span style="padding: 0 10px; color: #6b7280; font-size: 13px; font-weight: 600;">OR</span>
+          <hr style="flex-grow: 1; border: none; border-top: 1px solid #e2e8f0;">
+        </div>
+
+        <button type="button" id="googleLoginBtn" class="btn-outline login-btn"
+          style="background-color: white; color: #4a5568; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"
+            style="width: 18px; height: 18px;">
+          Sign in with Google
+        </button>
+
+        <div class="register-prompt">
+          Don't have an account? <a href="register.html">Register here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+  <!-- Database & App Scripts -->
+  <script src="js/firebase.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBhrDKZV_BDbDy9hDmcU6_MneQKx8aiijE",
+      authDomain: "petcare-e518d.firebaseapp.com",
+      projectId: "petcare-e518d",
+      storageBucket: "petcare-e518d.firebasestorage.app",
+      messagingSenderId: "1024623908060",
+      appId: "1:1024623908060:web:a294146194b01407991019",
+      measurementId: "G-FLQHNL3EHT"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Toggle Password Visibility
+      const togglePw = document.querySelector('.toggle-pw');
+      const passwordInput = document.getElementById('password');
+      if (togglePw && passwordInput) {
+        togglePw.addEventListener('click', () => {
+          const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordInput.setAttribute('type', type);
+          togglePw.classList.toggle('fa-eye-slash');
+          togglePw.classList.toggle('fa-eye');
+        });
+      }
+
+      async function handleSuccessfulLogin(user) {
+        // Sync with mock PetCareDB
+        const email = user.email ? user.email.toLowerCase() : '';
+        const role = (email === "admin@petcare.com") ? "admin" : "user";
+
+        const userData = {
+          id: user.uid,
+          name: user.displayName || (email ? email.split('@')[0] : 'User'),
+          email: email,
+          role: role,
+          status: "Active"
+        };
+
+        // Ensure user exists in live DB
+        try {
+          await PetCareDB.usersManager.ensureUserExists(userData);
+        } catch (e) {
+          console.error("Failed to ensure user in Firestore:", e);
+        }
+
+        // Set session
+        localStorage.setItem("petcare_logged_in_user", JSON.stringify(userData));
+
+        showToast("Login Successful! Redirecting...", "success");
+        setTimeout(() => {
+          window.location.href = role === "admin" ? "admin/dashboard.html" : "user/dashboard.html";
+        }, 1000);
+      }
+
+      function showToast(msg, type) {
+        let container = document.querySelector(".toast-container");
+        if (!container) {
+          container = document.createElement("div");
+          container.className = "toast-container";
+          document.body.appendChild(container);
+        }
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        const icon = type === "success" ? "fa-check-circle" : "fa-exclamation-circle";
+        toast.innerHTML = `<i class="fas ${icon}"></i> <span>${msg}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+
+      // Check if user is already logged in
+      onAuthStateChanged(auth, async (user) => {
+        if (user && !localStorage.getItem("petcare_logged_in_user")) {
+          // Local session missing but Firebase active means they logged out locally. Sign them out of Firebase.
+          await signOut(auth);
+        } else if (user && localStorage.getItem("petcare_logged_in_user")) {
+          const stored = JSON.parse(localStorage.getItem("petcare_logged_in_user"));
+          window.location.href = stored.role === "admin" ? "admin/dashboard.html" : "user/dashboard.html";
+        }
+      });
+
+      // Email/Password Login
+      const loginForm = document.getElementById("loginForm");
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          await handleSuccessfulLogin(userCredential.user);
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      });
+
+      // Google Sign In
+      const googleBtn = document.getElementById("googleLoginBtn");
+      if (googleBtn) {
+        googleBtn.addEventListener("click", async () => {
+          try {
+            const result = await signInWithPopup(auth, provider);
+            await handleSuccessfulLogin(result.user);
+          } catch (error) {
+            showToast(error.message, "error");
+          }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

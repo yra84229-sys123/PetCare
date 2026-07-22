@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Bookings | Admin Dashboard</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="view-transition" content="same-origin">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo">
+          <span class="logo-paw"><i class="fas fa-paw"></i></span> PawBuddy
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a href="dashboard.html" class="sidebar-link">
+            <i class="fas fa-chart-line"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="pets.html" class="sidebar-link">
+            <i class="fas fa-dog"></i> Manage Pets
+          </a>
+        </li>
+        <li>
+          <a href="owners.html" class="sidebar-link">
+            <i class="fas fa-users"></i> Manage Owners
+          </a>
+        </li>
+        <li>
+          <a href="bookings.html" class="sidebar-link active">
+            <i class="fas fa-calendar-alt"></i> Manage Bookings
+          </a>
+        </li>
+        <li>
+          <a href="messages.html" class="sidebar-link">
+            <i class="fas fa-envelope"></i> View Messages
+          </a>
+        </li>
+        <li>
+          <a href="users.html" class="sidebar-link">
+            <i class="fas fa-user-shield"></i> Manage Users
+          </a>
+        </li>
+        <li style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+          <a href="../index.html" class="sidebar-link">
+            <i class="fas fa-globe"></i> Back to Website
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#" class="sidebar-logout" onclick="PetCareDB.auth.logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="btn-icon dashboard-hamburger" id="dashboardHamburger"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1 style="font-size: 28px; font-weight: 800; color: var(--primary);">Manage Appointments</h1>
+            <p style="color: var(--text-muted); font-size: 14px;">Schedule new services, verify logs, and update status codes.</p>
+          </div>
+        </div>
+        <button class="btn-primary" id="btnAddBooking">
+          <i class="fas fa-plus"></i> Book Appointment
+        </button>
+      </header>
+
+      <!-- Panel holding Table & Filters -->
+      <section class="dashboard-panel">
+        <div class="panel-header">
+          <div class="action-bar">
+            <!-- Search field -->
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="text" id="bookingSearchInput" class="form-control" placeholder="Search by pet name, owner, service, or Booking ID...">
+            </div>
+            
+            <!-- Date Filter -->
+            <input type="date" id="bookingDateFilter" class="filter-select" style="min-height: 48px;">
+
+            <!-- Status Filter -->
+            <select id="bookingStatusFilter" class="filter-select">
+              <option value="">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Pet</th>
+                <th>Owner</th>
+                <th>Service</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+                <th>Notes Summary</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="bookingsTableBody">
+              <!-- Loaded dynamically by bookings.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Create & Update Modal -->
+  <div class="modal" id="bookingModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="bookingModalTitle">Create Appointment Booking</h3>
+        <button class="modal-close" id="btnCloseModal">&times;</button>
+      </div>
+      <form id="bookingForm">
+        <div class="modal-body">
+          <input type="hidden" id="bookingId">
+          
+          <div class="modal-grid-2">
+            <!-- Owner Selection -->
+            <div class="form-group">
+              <label for="bookingOwner">Owner Client *</label>
+              <select id="bookingOwner" class="form-control" required>
+                <!-- Loaded dynamically and syncs pets -->
+              </select>
+            </div>
+            
+            <!-- Pet Selection -->
+            <div class="form-group">
+              <label for="bookingPet">Pet Patient *</label>
+              <select id="bookingPet" class="form-control" required>
+                <!-- Filtered dynamically by owner selection -->
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-grid-2">
+            <!-- Service Selection -->
+            <div class="form-group">
+              <label for="bookingService">Service *</label>
+              <select id="bookingService" class="form-control" required>
+                <option value="" disabled selected>Select Service</option>
+                <option value="Physical Exam">Physical Exam</option>
+                <option value="Dental Care">Dental Care</option>
+                <option value="Flea and Tick Control">Flea and Tick Control</option>
+                <option value="Pet Nutrition">Pet Nutrition</option>
+                <option value="Pet Food">Pet Food</option>
+                <option value="Pet Accessories">Pet Accessories</option>
+                <option value="Health Products">Health Products</option>
+                <option value="Pet Adoption">Pet Adoption</option>
+                <option value="Training Supplies">Training Supplies</option>
+                <option value="Pet Grooming">Pet Grooming</option>
+                <option value="Warm Bathing">Warm Bathing</option>
+                <option value="Pet Vaccination">Pet Vaccination</option>
+                <option value="Pet Boarding">Pet Boarding</option>
+              </select>
+            </div>
+
+            <!-- Status Selector -->
+            <div class="form-group">
+              <label for="bookingStatus">Booking Status *</label>
+              <select id="bookingStatus" class="form-control" required>
+                <option value="Pending">Pending Approval</option>
+                <option value="Confirmed">Confirmed / Booked</option>
+                <option value="Completed">Service Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-grid-2">
+            <!-- Date Selection -->
+            <div class="form-group">
+              <label for="bookingDate">Appointment Date *</label>
+              <input type="date" id="bookingDate" class="form-control" required>
+            </div>
+            
+            <!-- Time Selection -->
+            <div class="form-group">
+              <label for="bookingTime">Appointment Time *</label>
+              <input type="time" id="bookingTime" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bookingNotes">Diagnostic / Styling Notes</label>
+            <textarea id="bookingNotes" class="form-control" rows="3" placeholder="Enter special requests, allergies, behavioral notes, etc."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" id="btnCancelBooking" style="padding: 8px 24px;">Cancel</button>
+          <button type="submit" class="btn-primary" style="padding: 8px 24px;">Save Appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script Modules -->
+  <script src="../js/firebase.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/bookings.js"></script>
+</body>
+</html>
