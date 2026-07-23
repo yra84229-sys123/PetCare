@@ -323,10 +323,10 @@
       const openAppointmentModal = async (serviceName) => {
         const currentUser = await PetCareDB.auth.getCurrentUser();
         if (!currentUser) {
-          if (window.showToast) {
-            window.showToast("Please create an account or login before booking an appointment.", "error");
-          } else {
-            alert("Please create an account or login before booking an appointment.");
+          if (window.showAuthModal) {
+            window.showAuthModal("Please log in to make an appointment.");
+          } else if (window.showToast) {
+            window.showToast("Please log in to make an appointment.", "error");
           }
           return;
         }
@@ -354,10 +354,10 @@
           // Enforce Auth Rule: Must be logged in to book
           const currentUser = await PetCareDB.auth.getCurrentUser();
           if (!currentUser) {
-            if (window.showToast) {
-              window.showToast("You must be logged in to book an appointment.", "error");
-            } else {
-              alert("You must be logged in to book an appointment.");
+            if (window.showAuthModal) {
+              window.showAuthModal("Please log in to make an appointment.");
+            } else if (window.showToast) {
+              window.showToast("Please log in to make an appointment.", "error");
             }
             return;
           }

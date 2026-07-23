@@ -1,372 +1,443 @@
 /**
- * PawBuddy React Components
- * Interactive and Amazing Features
+ * PawBuddy Modern 60 FPS Animation & Interactive Suite
+ * High-performance UI interactions, reveal observer, parallax, stats counters, ripple FX, preloader & smooth transitions.
+ * Full Support for Public Pages + Admin & User Dashboards.
  */
 
-// Smooth Scroll Animation on Page Load
-class SmoothScrollObserver {
-  constructor() {
-    this.observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-    this.observer = new IntersectionObserver(this.handleIntersection.bind(this), this.observerOptions);
-    this.init();
-  }
+(function () {
+  'use strict';
 
-  init() {
-    // Observe all sections with animation class
-    document.querySelectorAll('section, .service-card, .review-card, .hours-table-wrap').forEach(el => {
-      el.classList.add('scroll-animate');
-      this.observer.observe(el);
-    });
-  }
+  // State & RequestAnimationFrame throttlers
+  let isScrolling = false;
+  let lastScrollY = window.scrollY;
 
-  handleIntersection(entries) {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('animate-visible');
-        this.observer.unobserve(entry.target);
+  /* ==========================================
+     1. Splash Screen & Preloader Controller
+     ========================================== */
+  class SplashScreen {
+    constructor() {
+      this.init();
+    }
+
+    init() {
+      let splash = document.getElementById('splash-screen');
+      if (!splash) {
+        splash = document.createElement('div');
+        splash.id = 'splash-screen';
+        splash.innerHTML = `
+          <div class="splash-content">
+            <i class="fas fa-paw splash-paw-icon"></i>
+            <div class="splash-brand">PAWBUDDY</div>
+            <div class="splash-loader-bar"></div>
+          </div>
+        `;
+        document.body.prepend(splash);
       }
-    });
-  }
-}
 
-// Interactive Button Effects
-class ButtonInteractive {
-  constructor() {
-    this.init();
-  }
+      const hideSplash = () => {
+        if (!splash.classList.contains('splash-hidden')) {
+          splash.classList.add('splash-hidden');
+          setTimeout(() => {
+            if (splash.parentNode) {
+              splash.style.display = 'none';
+            }
+          }, 600);
+        }
+      };
 
-  init() {
-    document.querySelectorAll('button, .btn-primary, .btn-mint, [class*="btn"]').forEach(btn => {
-      btn.addEventListener('mouseenter', (e) => this.addRipple(e));
-      btn.addEventListener('click', (e) => this.handleClick(e));
-    });
-  }
-
-  addRipple(e) {
-    const btn = e.target.closest('button, .btn-primary, .btn-mint, [class*="btn"]');
-    if (!btn) return;
-
-    btn.style.transform = 'scale(0.98)';
-    btn.style.transition = 'all 0.3s ease';
-  }
-
-  handleClick(e) {
-    const btn = e.target.closest('button, .btn-primary, .btn-mint, [class*="btn"]');
-    if (!btn) return;
-
-    setTimeout(() => {
-      btn.style.transform = 'scale(1)';
-    }, 100);
-  }
-}
-
-// Card Hover Effects
-class CardHoverEffect {
-  constructor() {
-    this.init();
-  }
-
-  init() {
-    document.querySelectorAll('.service-card, .review-card, [class*="card"]').forEach(card => {
-      card.addEventListener('mouseenter', () => this.elevateCard(card));
-      card.addEventListener('mouseleave', () => this.resetCard(card));
-    });
-  }
-
-  elevateCard(card) {
-    card.style.transform = 'translateY(-8px)';
-    card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
-    card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-  }
-
-  resetCard(card) {
-    card.style.transform = 'translateY(0)';
-    card.style.boxShadow = 'var(--shadow-md)';
-  }
-}
-
-// Navigation Active State
-class NavActiveState {
-  constructor() {
-    this.init();
-  }
-
-  init() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('nav a[href]').forEach(link => {
-      const href = link.getAttribute('href');
-      if (href === currentPage || (currentPage === '' && href === 'index.html')) {
-        link.classList.add('active');
+      // Hide after load or fallback timeout
+      if (document.readyState === 'complete') {
+        setTimeout(hideSplash, 250);
+      } else {
+        window.addEventListener('load', () => setTimeout(hideSplash, 250));
+        setTimeout(hideSplash, 1200); // Fail-safe
       }
-    });
-  }
-}
-
-// Scroll Progress Bar
-class ScrollProgress {
-  constructor() {
-    this.createProgressBar();
-    this.init();
-  }
-
-  createProgressBar() {
-    const progressBar = document.createElement('div');
-    progressBar.id = 'scroll-progress';
-    progressBar.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #76e3d4, #1e4d8c);
-      width: 0%;
-      z-index: 9999;
-      transition: width 0.1s ease;
-    `;
-    document.body.insertBefore(progressBar, document.body.firstChild);
-  }
-
-  init() {
-    window.addEventListener('scroll', () => this.updateProgress());
-  }
-
-  updateProgress() {
-    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (winScroll / height) * 100;
-    document.getElementById('scroll-progress').style.width = scrolled + '%';
-  }
-}
-
-// Back to Top Button
-class BackToTopButton {
-  constructor() {
-    this.createButton();
-    this.init();
-  }
-
-  createButton() {
-    const btn = document.createElement('button');
-    btn.id = 'back-to-top';
-    btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    btn.style.cssText = `
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: #1e4d8c;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 20px;
-      display: none;
-      z-index: 999;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(30, 77, 140, 0.3);
-    `;
-    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    btn.addEventListener('mouseenter', () => {
-      btn.style.transform = 'scale(1.1)';
-      btn.style.boxShadow = '0 8px 25px rgba(30, 77, 140, 0.5)';
-    });
-    btn.addEventListener('mouseleave', () => {
-      btn.style.transform = 'scale(1)';
-      btn.style.boxShadow = '0 4px 15px rgba(30, 77, 140, 0.3)';
-    });
-    document.body.appendChild(btn);
-  }
-
-  init() {
-    window.addEventListener('scroll', () => this.toggleVisibility());
-  }
-
-  toggleVisibility() {
-    const btn = document.getElementById('back-to-top');
-    if (window.scrollY > 300) {
-      btn.style.display = 'flex';
-      btn.style.alignItems = 'center';
-      btn.style.justifyContent = 'center';
-    } else {
-      btn.style.display = 'none';
     }
   }
-}
 
-// Lazy Load Images
-class LazyLoadImages {
-  constructor() {
-    this.init();
+  /* ==========================================
+     2. Scroll Progress Bar
+     ========================================== */
+  class ScrollProgress {
+    constructor() {
+      this.createBar();
+    }
+
+    createBar() {
+      this.bar = document.getElementById('scroll-progress-bar');
+      if (!this.bar) {
+        this.bar = document.createElement('div');
+        this.bar.id = 'scroll-progress-bar';
+        document.body.prepend(this.bar);
+      }
+    }
+
+    update() {
+      if (!this.bar) return;
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      this.bar.style.width = `${scrolled}%`;
+    }
   }
 
-  init() {
-    if ('IntersectionObserver' in window) {
-      const imageObserver = new IntersectionObserver((entries) => {
+  /* ==========================================
+     3. Back To Top Button
+     ========================================== */
+  class BackToTopButton {
+    constructor() {
+      this.createButton();
+    }
+
+    createButton() {
+      this.btn = document.getElementById('back-to-top-btn');
+      if (!this.btn) {
+        this.btn = document.createElement('button');
+        this.btn.id = 'back-to-top-btn';
+        this.btn.setAttribute('aria-label', 'Back to top');
+        this.btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        document.body.appendChild(this.btn);
+      }
+
+      this.btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    update() {
+      if (!this.btn) return;
+      if (window.scrollY > 300) {
+        this.btn.classList.add('visible');
+      } else {
+        this.btn.classList.remove('visible');
+      }
+    }
+  }
+
+  /* ==========================================
+     4. Dynamic Header & Sidebar Scrolled State
+     ========================================== */
+  class HeaderScrollManager {
+    constructor() {
+      this.header = document.querySelector('.app-header');
+      this.dashHeader = document.querySelector('.dashboard-header');
+    }
+
+    update() {
+      if (this.header) {
+        if (window.scrollY > 25) {
+          this.header.classList.add('scrolled');
+        } else {
+          this.header.classList.remove('scrolled');
+        }
+      }
+      if (this.dashHeader) {
+        if (window.scrollY > 15) {
+          this.dashHeader.classList.add('scrolled');
+        } else {
+          this.dashHeader.classList.remove('scrolled');
+        }
+      }
+    }
+  }
+
+  /* ==========================================
+     5. Lightweight GPU Parallax Engine
+     ========================================== */
+  class ParallaxEngine {
+    constructor() {
+      this.elements = document.querySelectorAll('.hero-bg-img');
+    }
+
+    update() {
+      if (!this.elements.length) return;
+      const scrollY = window.scrollY;
+      if (scrollY > window.innerHeight) return;
+
+      this.elements.forEach(el => {
+        const speed = 0.28;
+        const translateY = scrollY * speed;
+        el.style.transform = `translate3d(0, ${translateY}px, 0)`;
+      });
+    }
+  }
+
+  /* ==========================================
+     6. Section, Dashboard Panel & Card Reveal Observer
+     ========================================== */
+  class RevealObserver {
+    constructor() {
+      this.init();
+    }
+
+    init() {
+      const observerOptions = {
+        root: null,
+        threshold: 0.08,
+        rootMargin: '0px 0px -20px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const img = entry.target;
-            img.src = img.dataset.src || img.src;
-            img.classList.add('loaded');
-            imageObserver.unobserve(img);
+            entry.target.classList.add('revealed');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // Add animate-reveal class to target elements (Public + Dashboard)
+      const targetSelectors = [
+        'section:not(.hero-image-style)',
+        '.service-card',
+        '.review-card',
+        '.pricing-card',
+        '.wide-service-card',
+        '.hours-table-wrap',
+        '.contact-card',
+        '.location-card',
+        '.story-text',
+        '.story-graphics',
+        '.stat-card',
+        '.dashboard-panel',
+        '.profile-card',
+        '.form-card',
+        '.table-responsive',
+        '.modal-content'
+      ];
+
+      const elements = document.querySelectorAll(targetSelectors.join(', '));
+      elements.forEach(el => {
+        if (!el.classList.contains('animate-reveal')) {
+          el.classList.add('animate-reveal');
+        }
+      });
+
+      // Apply stagger delays to grid children (Public + Dashboard)
+      const gridContainers = document.querySelectorAll('.services-grid, .cards-grid-3, .features-grid, .pricing-grid, .stats-grid, .sidebar-menu, .grid-2');
+      gridContainers.forEach(grid => {
+        Array.from(grid.children).forEach((child, index) => {
+          const staggerClass = `stagger-${(index % 5) + 1}`;
+          child.classList.add(staggerClass);
+          if (!child.classList.contains('animate-reveal')) {
+            child.classList.add('animate-reveal');
           }
         });
       });
 
-      document.querySelectorAll('img[data-src]').forEach(img => imageObserver.observe(img));
+      // Observe all elements
+      document.querySelectorAll('.animate-reveal').forEach(el => observer.observe(el));
+
+      // Observe dynamic changes (e.g. table rows or dynamic cards rendered by JS)
+      const dynamicObserver = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === 1) { // Element node
+              if (node.matches('tr, .stat-card, .dashboard-panel, .pet-card, .booking-card')) {
+                node.classList.add('animate-reveal');
+                setTimeout(() => node.classList.add('revealed'), 50);
+              }
+            }
+          });
+        });
+      });
+
+      const dynamicContainers = document.querySelectorAll('tbody, #petsGrid, .dashboard-wrapper');
+      dynamicContainers.forEach(c => dynamicObserver.observe(c, { childList: true, subtree: true }));
     }
   }
-}
 
-// Smooth Navigation Links
-class SmoothNavigation {
-  constructor() {
-    this.init();
-  }
+  /* ==========================================
+     7. Animated Statistics Counters
+     ========================================== */
+  class StatsCounter {
+    constructor() {
+      this.init();
+    }
 
-  init() {
-    document.querySelectorAll('a[href*="#"]').forEach(link => {
-      link.addEventListener('click', (e) => this.smoothScroll(e));
-    });
-  }
+    init() {
+      const counters = document.querySelectorAll('.stat-number, [data-counter]');
+      if (!counters.length) return;
 
-  smoothScroll(e) {
-    const href = e.currentTarget.getAttribute('href');
-    if (href.startsWith('#')) {
-      const target = document.querySelector(href);
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            this.animateCounter(entry.target);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      counters.forEach(counter => observer.observe(counter));
+    }
+
+    animateCounter(el) {
+      const targetText = el.getAttribute('data-target') || el.innerText;
+      const numericVal = parseInt(targetText.replace(/\D/g, ''), 10);
+      const suffix = targetText.replace(/[0-9]/g, '');
+
+      if (isNaN(numericVal)) return;
+
+      const duration = 1600; // ms
+      const startTime = performance.now();
+
+      const step = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = progress * (2 - progress);
+        const currentCount = Math.floor(easedProgress * numericVal);
+
+        el.innerText = `${currentCount.toLocaleString()}${suffix}`;
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.innerText = `${numericVal.toLocaleString()}${suffix}`;
+        }
+      };
+
+      requestAnimationFrame(step);
     }
   }
-}
 
-// Loading State on Links
-class LinkLoadingState {
-  constructor() {
-    this.init();
-  }
+  /* ==========================================
+     8. Button & Action Ripple Effect
+     ========================================== */
+  class RippleEffect {
+    constructor() {
+      this.init();
+    }
 
-  init() {
-    document.querySelectorAll('a:not([href*="#"]):not([target="_blank"])').forEach(link => {
-      link.addEventListener('click', (e) => {
-        if (link.href && !link.href.includes('javascript:')) {
-          link.style.opacity = '0.6';
-          link.style.pointerEvents = 'none';
+    init() {
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('button, .btn-primary, .btn-mint, .btn-hero-shop, .view-more, .btn-icon, .sidebar-link, [class*="btn"]');
+        if (btn) {
+          this.createRipple(e, btn);
         }
       });
-    });
-  }
-}
+    }
 
-// Text Animation on Scroll
-class TextAnimationOnScroll {
-  constructor() {
-    this.init();
+    createRipple(e, btn) {
+      const rect = btn.getBoundingClientRect();
+      const circle = document.createElement('span');
+      const diameter = Math.max(rect.width, rect.height);
+      const radius = diameter / 2;
+
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${e.clientX - rect.left - radius}px`;
+      circle.style.top = `${e.clientY - rect.top - radius}px`;
+      circle.classList.add('ripple-span');
+
+      const existingRipple = btn.querySelector('.ripple-span');
+      if (existingRipple) {
+        existingRipple.remove();
+      }
+
+      btn.classList.add('btn-ripple');
+      btn.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    }
   }
 
-  init() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.animation = 'fadeInText 0.8s ease forwards';
+  /* ==========================================
+     9. Lazy Image & Skeleton Shimmer Loader
+     ========================================== */
+  class LazySkeletonLoader {
+    constructor() {
+      this.init();
+    }
+
+    init() {
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+        if (img.classList.contains('logo-img') || img.classList.contains('icon') || img.id === 'photoPreview') return;
+
+        img.setAttribute('loading', 'lazy');
+        img.classList.add('img-lazy');
+
+        const parent = img.parentElement;
+        if (parent && !parent.classList.contains('img-skeleton-wrap')) {
+          parent.classList.add('img-skeleton-wrap');
+        }
+
+        const handleLoad = () => {
+          img.classList.add('loaded');
+          if (parent && parent.classList.contains('img-skeleton-wrap')) {
+            parent.classList.add('loaded');
+          }
+        };
+
+        if (img.complete) {
+          handleLoad();
+        } else {
+          img.addEventListener('load', handleLoad);
         }
       });
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('h1, h2, h3, .intro-description').forEach(el => {
-      observer.observe(el);
-    });
+    }
   }
-}
 
-// Add CSS for animations
-function addAnimationStyles() {
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes fadeInText {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
+  /* ==========================================
+     10. Page View Transitions API & Smooth Links
+     ========================================== */
+  class NavigationTransitions {
+    constructor() {
+      this.init();
+    }
+
+    init() {
+      document.querySelectorAll('a[href]').forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.target === '_blank') {
+          return;
+        }
+
+        link.addEventListener('click', (e) => {
+          if (document.startViewTransition && href.endsWith('.html')) {
+            e.preventDefault();
+            document.startViewTransition(() => {
+              window.location.href = href;
+            });
+          }
+        });
+      });
+    }
+  }
+
+  /* ==========================================
+     Master Execution Loop & RAF Scroll Throttler
+     ========================================== */
+  document.addEventListener('DOMContentLoaded', () => {
+    const splash = new SplashScreen();
+    const scrollProgress = new ScrollProgress();
+    const backToTop = new BackToTopButton();
+    const headerScroll = new HeaderScrollManager();
+    const parallax = new ParallaxEngine();
+    const reveal = new RevealObserver();
+    const stats = new StatsCounter();
+    const ripple = new RippleEffect();
+    const lazyImages = new LazySkeletonLoader();
+    const transitions = new NavigationTransitions();
+
+    // 60 FPS RequestAnimationFrame Scroll Loop
+    const onScrollLoop = () => {
+      scrollProgress.update();
+      backToTop.update();
+      headerScroll.update();
+      parallax.update();
+      isScrolling = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      lastScrollY = window.scrollY;
+      if (!isScrolling) {
+        requestAnimationFrame(onScrollLoop);
+        isScrolling = true;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+    }, { passive: true });
 
-    .scroll-animate {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
+    // Initial trigger
+    requestAnimationFrame(onScrollLoop);
+    console.log('✨ PawBuddy 60 FPS Public & Dashboard Suite Active');
+  });
 
-    .scroll-animate.animate-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    a {
-      transition: color 0.3s ease, opacity 0.3s ease;
-    }
-
-    button, [class*="btn"] {
-      position: relative;
-      overflow: hidden;
-    }
-
-    img {
-      transition: opacity 0.3s ease;
-    }
-
-    img.loaded {
-      animation: fadeInImage 0.5s ease;
-    }
-
-    @keyframes fadeInImage {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-// Initialize all components when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  addAnimationStyles();
-  new SmoothScrollObserver();
-  new ButtonInteractive();
-  new CardHoverEffect();
-  new NavActiveState();
-  new ScrollProgress();
-  new BackToTopButton();
-  new LazyLoadImages();
-  new SmoothNavigation();
-  new LinkLoadingState();
-  new TextAnimationOnScroll();
-
-  console.log('✨ PawBuddy React Components Loaded - Your site is now amazing!');
-});
-
-// Export for modular use
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    SmoothScrollObserver,
-    ButtonInteractive,
-    CardHoverEffect,
-    NavActiveState,
-    ScrollProgress,
-    BackToTopButton,
-    LazyLoadImages,
-    SmoothNavigation,
-    LinkLoadingState,
-    TextAnimationOnScroll
-  };
-}
+})();

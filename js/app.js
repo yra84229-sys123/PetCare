@@ -103,6 +103,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 4000);
   };
 
+  // Modern Auth Warning Modal Dialog
+  window.showAuthModal = function(message = "Please log in to make an appointment.", redirectUrl) {
+    if (!redirectUrl) {
+      const isSubdir = window.location.pathname.includes("/admin/") || window.location.pathname.includes("/user/");
+      redirectUrl = isSubdir ? "../login.html" : "login.html";
+    }
+
+    let modal = document.getElementById("auth-warning-modal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "auth-warning-modal";
+      modal.className = "auth-modal-overlay";
+      modal.innerHTML = `
+        <div class="auth-modal-card">
+          <div class="auth-modal-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h3 class="auth-modal-title">Authentication Required</h3>
+          <p class="auth-modal-message">${message}</p>
+          <div class="auth-modal-actions">
+            <button type="button" class="btn-auth-cancel" id="btnAuthModalCancel">Cancel</button>
+            <a href="${redirectUrl}" class="btn-auth-login" id="btnAuthModalLogin">Log In</a>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      modal.querySelector("#btnAuthModalCancel").addEventListener("click", () => {
+        modal.classList.remove("active");
+      });
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("active");
+        }
+      });
+    } else {
+      modal.querySelector(".auth-modal-message").textContent = message;
+      modal.querySelector("#btnAuthModalLogin").setAttribute("href", redirectUrl);
+    }
+
+    requestAnimationFrame(() => {
+      modal.classList.add("active");
+    });
+  };
+
+  // Intercept any "Make an appointment" or appointment link clicks when logged out
+  document.addEventListener("click", async (e) => {
+    const target = e.target.closest("a, button, .make-appointment-btn");
+    if (!target) return;
+
+    const text = (target.textContent || "").trim().toLowerCase();
+    const isAppointmentAction = text.includes("make an appointment") || 
+                                text.includes("book an appointment") || 
+                                target.classList.contains("make-appointment-btn");
+
+    if (isAppointmentAction) {
+      if (window.PetCareDB && window.PetCareDB.auth) {
+        const user = await window.PetCareDB.auth.getCurrentUser();
+        if (!user) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.showAuthModal("Please log in to make an appointment.");
+        }
+      }
+    }
+  }, true);
+
+
   // Contact Form Handling
   const contactForm = document.getElementById("contactForm");
   if (contactForm) {
