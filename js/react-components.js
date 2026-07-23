@@ -12,50 +12,6 @@
   let lastScrollY = window.scrollY;
 
   /* ==========================================
-     1. Splash Screen & Preloader Controller
-     ========================================== */
-  class SplashScreen {
-    constructor() {
-      this.init();
-    }
-
-    init() {
-      let splash = document.getElementById('splash-screen');
-      if (!splash) {
-        splash = document.createElement('div');
-        splash.id = 'splash-screen';
-        splash.innerHTML = `
-          <div class="splash-content">
-            <i class="fas fa-paw splash-paw-icon"></i>
-            <div class="splash-brand">PAWBUDDY</div>
-            <div class="splash-loader-bar"></div>
-          </div>
-        `;
-        document.body.prepend(splash);
-      }
-
-      const hideSplash = () => {
-        if (!splash.classList.contains('splash-hidden')) {
-          splash.classList.add('splash-hidden');
-          setTimeout(() => {
-            if (splash.parentNode) {
-              splash.style.display = 'none';
-            }
-          }, 600);
-        }
-      };
-
-      // Hide after load or fallback timeout
-      if (document.readyState === 'complete') {
-        setTimeout(hideSplash, 250);
-      } else {
-        window.addEventListener('load', () => setTimeout(hideSplash, 250));
-        setTimeout(hideSplash, 1200); // Fail-safe
-      }
-    }
-  }
-
-  /* ==========================================
      2. Scroll Progress Bar
      ========================================== */
   class ScrollProgress {
@@ -407,7 +363,6 @@
      Master Execution Loop & RAF Scroll Throttler
      ========================================== */
   document.addEventListener('DOMContentLoaded', () => {
-    const splash = new SplashScreen();
     const scrollProgress = new ScrollProgress();
     const backToTop = new BackToTopButton();
     const headerScroll = new HeaderScrollManager();
