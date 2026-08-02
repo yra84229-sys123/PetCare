@@ -149,27 +149,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // Intercept any "Make an appointment" or appointment link clicks when logged out
-  document.addEventListener("click", async (e) => {
-    const target = e.target.closest("a, button, .make-appointment-btn");
-    if (!target) return;
+  // Intercept appointment actions only on public pages, not dashboard sidebar links
+  if (!window.location.pathname.includes('/user/') && !window.location.pathname.includes('/admin/')) {
+    document.addEventListener("click", async (e) => {
+      const target = e.target.closest("a, button, .make-appointment-btn");
+      if (!target) return;
 
-    const text = (target.textContent || "").trim().toLowerCase();
-    const isAppointmentAction = text.includes("make an appointment") || 
-                                text.includes("book an appointment") || 
-                                target.classList.contains("make-appointment-btn");
+      const text = (target.textContent || "").trim().toLowerCase();
+      const isAppointmentAction = text.includes("make an appointment") || 
+                                  text.includes("book an appointment") || 
+                                  target.classList.contains("make-appointment-btn");
 
-    if (isAppointmentAction) {
-      if (window.PetCareDB && window.PetCareDB.auth) {
-        const user = await window.PetCareDB.auth.getCurrentUser();
-        if (!user) {
-          e.preventDefault();
-          e.stopPropagation();
-          window.showAuthModal("Please log in to make an appointment.");
+      if (isAppointmentAction) {
+        if (window.PetCareDB && window.PetCareDB.auth) {
+          const user = await window.PetCareDB.auth.getCurrentUser();
+          if (!user) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.showAuthModal("Please log in to make an appointment.");
+          }
         }
       }
-    }
-  }, true);
+    }, true);
+  }
 
 
   // Contact Form Handling
@@ -259,10 +261,26 @@ document.addEventListener("DOMContentLoaded", () => {
       e.stopPropagation();
       sidebarEl.classList.toggle('active');
     });
-    
+
     // Close sidebar when clicking outside on mobile
     document.addEventListener('click', (e) => {
       if (sidebarEl.classList.contains('active') && !sidebarEl.contains(e.target) && !burgerBtn.contains(e.target)) {
+        sidebarEl.classList.remove('active');
+      }
+    });
+
+    // Close sidebar when a navigation link is selected on mobile
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (sidebarEl.classList.contains('active')) {
+          sidebarEl.classList.remove('active');
+        }
+      });
+    });
+
+    // Reset sidebar state when switching from mobile to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 992 && sidebarEl.classList.contains('active')) {
         sidebarEl.classList.remove('active');
       }
     });

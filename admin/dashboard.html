@@ -19,6 +19,7 @@
         <a href="../index.html" class="logo">
           <span class="logo-paw"><i class="fas fa-paw"></i></span> PawBuddy
         </a>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fas fa-times"></i></button>
       </div>
       <ul class="sidebar-menu">
         <li>
@@ -68,12 +69,11 @@
     <main class="main-content">
       <!-- Top Dashboard Header -->
       <header class="dashboard-header">
-        <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="dashboard-title">
           <button class="btn-icon dashboard-hamburger" id="dashboardHamburger"><i class="fas fa-bars"></i></button>
           <div>
-            <h1 style="font-size: 28px; font-weight: 800; color: var(--primary);">System Overview</h1>
-            <p style="color: var(--text-muted); font-size: 14px;">Welcome back to your administration command center.
-            </p>
+            <h1>System Overview</h1>
+            <p>Welcome back to your administration command center.</p>
           </div>
         </div>
 
@@ -122,7 +122,7 @@
       </section>
 
       <!-- Grid for Reports & Recent Bookings -->
-      <div style="display: grid; grid-template-columns: 1fr 1.8fr; gap: 30px; align-items: start;" class="cards-grid-3">
+      <div class="dashboard-main-grid admin-dashboard-grid">
 
         <!-- Booking Reports Section -->
         <section class="dashboard-panel">

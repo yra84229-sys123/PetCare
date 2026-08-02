@@ -105,11 +105,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Mobile Dashboard Sidebar Toggle
   const sidebar = document.querySelector(".sidebar");
   const hamburger = document.getElementById("dashboardHamburger");
+  const sidebarClose = document.getElementById("sidebarClose");
   if (hamburger && sidebar) {
     hamburger.addEventListener("click", () => {
       sidebar.classList.toggle("active");
     });
   }
+
+  if (sidebarClose && sidebar) {
+    sidebarClose.addEventListener("click", () => {
+      sidebar.classList.remove("active");
+    });
+  }
+
+  // Close mobile sidebar on navigation link click
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => {
+      if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    });
+  });
 
   // Initialize Dashboard
   loadDashboardData();
