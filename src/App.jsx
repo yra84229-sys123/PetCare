@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PublicLayout from './layouts/PublicLayout';
 
 import Home from './pages/Home';
@@ -26,7 +26,7 @@ import AdminUsers from './pages/admin/Users';
 
 function App() {
   return (
-    <Router basename="/PetCare">
+    <Router>
       <Routes>
         {/* Public Website Routes */}
         <Route element={<PublicLayout />}>
