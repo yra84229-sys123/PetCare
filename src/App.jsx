@@ -26,7 +26,7 @@ import AdminUsers from './pages/admin/Users';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/PetCare">
       <Routes>
         {/* Public Website Routes */}
         <Route element={<PublicLayout />}>
