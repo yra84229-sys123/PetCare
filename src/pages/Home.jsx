@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <main>
       <section className="hero-image-style">
-        <img src="/images/HOME1.jpg" alt="Dogs resting" className="hero-bg-img" />
+        <img src={`${import.meta.env.BASE_URL}images/HOME1.jpg`} alt="Dogs resting" className="hero-bg-img" />
         <div className="hero-overlay">
           <div className="hero-content-wrapper">
             <p className="hero-top-text"></p>
@@ -61,14 +61,14 @@ const Home = () => {
       <section className="cta-banner" id="friend-circle-cta">
         <div className="cta-container">
           <div className="cta-left-img">
-            <img src="/images/4.jpg" alt="Beautiful orange tabby cat looking up" />
+            <img src={`${import.meta.env.BASE_URL}images/4.jpg`} alt="Beautiful orange tabby cat looking up" />
           </div>
           <div className="cta-content">
             <h2>Join Our Friend Circle</h2>
             <p>We can't wait to meet our newest BFF. Book your slot today!</p>
           </div>
           <div className="cta-right-img">
-            <img src="/images/9.jpg" alt="Happy corgi dog smiling" />
+            <img src={`${import.meta.env.BASE_URL}images/9.jpg`} alt="Happy corgi dog smiling" />
           </div>
         </div>
       </section>

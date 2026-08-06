@@ -37,7 +37,7 @@ const Login = () => {
         const user = JSON.parse(userJson);
         if (user.role === "admin") navigate('/admin/dashboard');
         else navigate('/user/dashboard');
-      } catch (e) {
+      } catch (_e) {
         // invalid json
       }
     }

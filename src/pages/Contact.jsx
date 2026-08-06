@@ -18,7 +18,7 @@ const Contact = () => {
     <>
       {/* Welcome / Hero Section */}
       <section className="hero-image-style">
-        <img src="/images/HOME1.jpg" alt="Dogs resting" className="hero-bg-img" />
+        <img src={`${import.meta.env.BASE_URL}images/HOME1.jpg`} alt="Dogs resting" className="hero-bg-img" />
         <div className="hero-overlay">
           <div className="hero-content-wrapper">
             <p className="hero-top-text"></p>

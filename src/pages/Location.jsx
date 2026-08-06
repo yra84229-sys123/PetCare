@@ -6,22 +6,22 @@ const Location = () => {
     {
       text: `"I had a great experience with the service pet care. They were very professional and attentive to my pet's needs."`,
       author: "Andrea Sanchez",
-      avatar: "/images/1.jpg",
-      puppy: "/images/3.jpg",
+      avatar: `${import.meta.env.BASE_URL}images/1.jpg`,
+      puppy: `${import.meta.env.BASE_URL}images/3.jpg`,
       stars: 5
     },
     {
       text: `"The clinic was extremely clean and the doctors were compassionate. They handled our nervous corgi with absolute care."`,
       author: "Marcus Vance",
-      avatar: "/images/4.jpg",
-      puppy: "/images/9.jpg",
+      avatar: `${import.meta.env.BASE_URL}images/4.jpg`,
+      puppy: `${import.meta.env.BASE_URL}images/9.jpg`,
       stars: 5
     },
     {
       text: `"Outstanding scheduling, state-of-the-art diagnostics, and clear transparency regarding pricing. Highly recommend!"`,
       author: "Clara Reynolds",
-      avatar: "/images/2.jpg",
-      puppy: "/images/2.jpg",
+      avatar: `${import.meta.env.BASE_URL}images/2.jpg`,
+      puppy: `${import.meta.env.BASE_URL}images/2.jpg`,
       stars: 5
     }
   ];
@@ -42,7 +42,7 @@ const Location = () => {
     <main>
       {/* Location Banner & Description */}
       <section className="hero-image-style">
-        <img src="/images/11.jpg" alt="Veterinarian examining dog" className="hero-bg-img" />
+        <img src={`${import.meta.env.BASE_URL}images/11.jpg`} alt="Veterinarian examining dog" className="hero-bg-img" />
         <div className="hero-overlay">
           <div className="hero-content-wrapper">
             <p className="hero-top-text">Visit us today</p>

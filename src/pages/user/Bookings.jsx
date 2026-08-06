@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useOutletContext, Link } from 'react-router-dom';
+import { useOutletContext, Link, useLocation } from 'react-router-dom';
 
 const UserBookings = () => {
   const { user } = useOutletContext();
+  const location = useLocation();
   const [owner, setOwner] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [pets, setPets] = useState([]);
@@ -50,6 +51,23 @@ const UserBookings = () => {
     
     loadData();
   }, [user]);
+
+  useEffect(() => {
+    if (location.state?.autoOpenModal && !loading && owner) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      setBookingFormData(prev => ({
+        ...prev,
+        date: tomorrow.toISOString().split('T')[0],
+        service: location.state.selectedService || prev.service
+      }));
+      setIsModalOpen(true);
+      
+      // Clear history state to prevent reopening on reload
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, loading, owner]);
 
   const handleCancelBooking = async (id) => {
     if (window.confirm("Are you sure you want to cancel this booking?")) {

@@ -5,7 +5,7 @@ const About = () => {
     <main>
       {/* Who We Are Hero Section */}
       <section className="hero-image-style">
-        <img src="/images/12.jpg" alt="Husky dog lying on couch" className="hero-bg-img" />
+        <img src={`${import.meta.env.BASE_URL}images/12.jpg`} alt="Husky dog lying on couch" className="hero-bg-img" />
         <div className="hero-overlay">
           <div className="hero-content-wrapper">
             <p className="hero-top-text">Discover Our Story</p>
@@ -55,11 +55,11 @@ const About = () => {
             <div className="story-graphics">
               {/* Dog pill vertical image */}
               <div className="story-img-pill pill-dog">
-                <img src="/images/9.jpg" alt="Dog" />
+                <img src={`${import.meta.env.BASE_URL}images/9.jpg`} alt="Dog" />
               </div>
               {/* Cat pill vertical image */}
               <div className="story-img-pill pill-cat">
-                <img src="/images/8.jpg" alt="Cat" />
+                <img src={`${import.meta.env.BASE_URL}images/8.jpg`} alt="Cat" />
               </div>
               {/* Floating dots */}
               <div className="dot dot-story-blue"></div>
@@ -95,7 +95,7 @@ const About = () => {
             {/* Team Card */}
             <div className="team-card">
               <div className="team-photo-wrapper">
-                <img src="/images/Yura.jpg" alt="Team member photo" className="team-photo" />
+                <img src={`${import.meta.env.BASE_URL}images/Yura.jpg`} alt="Team member photo" className="team-photo" />
               </div>
               <div className="team-info">
                 <h3 className="team-name">Thon Youra</h3>
@@ -123,7 +123,7 @@ const About = () => {
       <section className="cta-banner">
         <div className="cta-container">
           <div className="cta-left-img">
-            <img src="/images/4.jpg" alt="Beautiful orange tabby cat looking up" />
+            <img src={`${import.meta.env.BASE_URL}images/4.jpg`} alt="Beautiful orange tabby cat looking up" />
           </div>
           <div className="cta-content">
             <h2>Join Our Friend Circle</h2>
@@ -131,7 +131,7 @@ const About = () => {
             <Link to="/location" className="btn-mint">Locations & Hours</Link>
           </div>
           <div className="cta-right-img">
-            <img src="/images/9.jpg" alt="Happy corgi dog smiling" />
+            <img src={`${import.meta.env.BASE_URL}images/9.jpg`} alt="Happy corgi dog smiling" />
           </div>
         </div>
       </section>

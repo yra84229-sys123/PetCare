@@ -1,10 +1,8 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import AuthModal from './AuthModal';
 
 const Header = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -47,11 +45,7 @@ const Header = () => {
             </Link>
           ) : (
             <Link 
-              to="#" 
-              onClick={(e) => { 
-                e.preventDefault(); 
-                setIsAuthModalOpen(true); 
-              }} 
+              to="/login" 
               className="header-icon-link"
             >
               <i className="far fa-user"></i> <span>Account</span>
@@ -83,12 +77,6 @@ const Header = () => {
           <li><NavLink to="/contact" onClick={() => setIsMenuOpen(false)}>Contact</NavLink></li>
         </ul>
       </div>
-
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-        onLoginSuccess={(userData) => setLoggedInUser(userData)}
-      />
     </header>
   );
 };

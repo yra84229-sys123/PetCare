@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Services Data
 const SERVICES_DATA = [
@@ -12,7 +13,7 @@ const SERVICES_DATA = [
     bgClass: "bg-mint",
     circleColor: "bg-circle-cyan",
     dotColor: "blue-dot",
-    image: "/images/s1.jpg"
+    image: `${import.meta.env.BASE_URL}images/s1.jpg`
   },
   {
     id: "dental-care",
@@ -24,7 +25,7 @@ const SERVICES_DATA = [
     bgClass: "bg-peach",
     circleColor: "bg-circle-orange",
     dotColor: "yellow-dot",
-    image: "/images/s2.jpg"
+    image: `${import.meta.env.BASE_URL}images/s2.jpg`
   },
   {
     id: "flea-control",
@@ -36,7 +37,7 @@ const SERVICES_DATA = [
     bgClass: "bg-yellow",
     circleColor: "bg-circle-yellow",
     dotColor: "orange-dot",
-    image: "/images/s3.jpg"
+    image: `${import.meta.env.BASE_URL}images/s3.jpg`
   },
   {
     id: "pet-nutrition",
@@ -48,7 +49,7 @@ const SERVICES_DATA = [
     bgClass: "bg-mint",
     circleColor: "bg-circle-cyan",
     dotColor: "blue-dot",
-    image: "/images/s4.jpg"
+    image: `${import.meta.env.BASE_URL}images/s4.jpg`
   },
   {
     id: "pet-food",
@@ -60,7 +61,7 @@ const SERVICES_DATA = [
     bgClass: "bg-purple",
     circleColor: "bg-circle-purple",
     dotColor: "purple-dot",
-    image: "/images/s5.jpg"
+    image: `${import.meta.env.BASE_URL}images/s5.jpg`
   },
   {
     id: "pet-accessories",
@@ -72,7 +73,7 @@ const SERVICES_DATA = [
     bgClass: "bg-peach",
     circleColor: "bg-circle-orange",
     dotColor: "yellow-dot",
-    image: "/images/s6.jpg"
+    image: `${import.meta.env.BASE_URL}images/s6.jpg`
   },
   {
     id: "health-products",
@@ -84,7 +85,7 @@ const SERVICES_DATA = [
     bgClass: "bg-green",
     circleColor: "bg-circle-green",
     dotColor: "green-dot",
-    image: "/images/s7.jpg"
+    image: `${import.meta.env.BASE_URL}images/s7.jpg`
   },
   {
     id: "pet-adoption",
@@ -96,7 +97,7 @@ const SERVICES_DATA = [
     bgClass: "bg-blue",
     circleColor: "bg-circle-blue",
     dotColor: "blue-dot",
-    image: "/images/s8.jpg"
+    image: `${import.meta.env.BASE_URL}images/s8.jpg`
   },
   {
     id: "training-supplies",
@@ -108,7 +109,7 @@ const SERVICES_DATA = [
     bgClass: "bg-yellow",
     circleColor: "bg-circle-yellow",
     dotColor: "orange-dot",
-    image: "/images/s9.jpg"
+    image: `${import.meta.env.BASE_URL}images/s9.jpg`
   },
   {
     id: "pet-grooming",
@@ -120,7 +121,7 @@ const SERVICES_DATA = [
     bgClass: "bg-blue",
     circleColor: "bg-circle-blue",
     dotColor: "blue-dot",
-    image: "/images/grooming.jpg"
+    image: `${import.meta.env.BASE_URL}images/grooming.jpg`
   },
   {
     id: "warm-bathing",
@@ -132,7 +133,7 @@ const SERVICES_DATA = [
     bgClass: "bg-pink",
     circleColor: "bg-circle-pink",
     dotColor: "red-dot",
-    image: "/images/bathing.jpg"
+    image: `${import.meta.env.BASE_URL}images/bathing.jpg`
   },
   {
     id: "pet-vaccination",
@@ -144,7 +145,7 @@ const SERVICES_DATA = [
     bgClass: "bg-green",
     circleColor: "bg-circle-green",
     dotColor: "green-dot",
-    image: "/images/va.jpg"
+    image: `${import.meta.env.BASE_URL}images/va.jpg`
   },
   {
     id: "pet-boarding",
@@ -156,7 +157,7 @@ const SERVICES_DATA = [
     bgClass: "bg-yellow",
     circleColor: "bg-circle-yellow",
     dotColor: "orange-dot",
-    image: "/images/boarding.jpg"
+    image: `${import.meta.env.BASE_URL}images/boarding.jpg`
   }
 ];
 
@@ -166,37 +167,28 @@ const REVIEWS_DATA = [
     id: 1,
     text: "I had a great experience with the service pet care. They were very professional and attentive to my pet's needs.",
     author: "Andrea Sanchez",
-    avatar: "/images/10.jpg",
+    avatar: `${import.meta.env.BASE_URL}images/10.jpg`,
     stars: 5
   },
   {
     id: 2,
     text: "The service pet care went above and beyond my expectations. Highly recommend their physical exam and dental cleaning!",
     author: "Veronica Diaz",
-    avatar: "/images/2.jpg",
+    avatar: `${import.meta.env.BASE_URL}images/2.jpg`,
     stars: 5
   },
   {
     id: 3,
     text: "Our German Shepherd Rocky had an amazing flea control service. Quick, clean, and the staff was super friendly.",
     author: "Michael Chang",
-    avatar: "/images/3.jpg",
+    avatar: `${import.meta.env.BASE_URL}images/3.jpg`,
     stars: 5
   }
 ];
 
 function Services() {
   const [reviewIndex, setReviewIndex] = useState(0);
-
-  // Modal State
-  const [modalActive, setModalActive] = useState(false);
-  const [selectedService, setSelectedService] = useState("");
-
-  // Form States
-  const [clientName, setClientName] = useState("");
-  const [clientEmail, setClientEmail] = useState("");
-  const [clientPhone, setClientPhone] = useState("");
-  const [clientNotes, setClientNotes] = useState("");
+  const navigate = useNavigate();
 
   const nextReview = () => {
     setReviewIndex((prev) => (prev + 1) % REVIEWS_DATA.length);
@@ -207,26 +199,19 @@ function Services() {
   };
 
   const openAppointmentModal = async (serviceName) => {
-    setSelectedService(serviceName);
-    setModalActive(true);
-  };
-
-  const closeAppointmentModal = () => {
-    setModalActive(false);
-  };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    if (!clientName || !clientEmail || !clientPhone || !selectedService) {
-      alert("Please fill in all required fields.");
+    const currentUser = await window.PetCareDB?.auth?.getCurrentUser();
+    if (!currentUser) {
+      alert("Please log in or register to book an appointment.");
+      navigate('/login');
       return;
     }
-    alert("Appointment request submitted successfully!");
-    setClientName("");
-    setClientEmail("");
-    setClientPhone("");
-    setClientNotes("");
-    setModalActive(false);
+    // Redirect to user bookings with pre-selected service
+    navigate('/user/bookings', { 
+      state: { 
+        selectedService: serviceName, 
+        autoOpenModal: true 
+      } 
+    });
   };
 
   return (
@@ -234,7 +219,7 @@ function Services() {
       {/* Services Hero Section */}
       <main>
         <section className="hero-image-style">
-          <img src="/images/HOME1.jpg" alt="Dogs resting" className="hero-bg-img" />
+          <img src={`${import.meta.env.BASE_URL}images/HOME1.jpg`} alt="Dogs resting" className="hero-bg-img" />
           <div className="hero-overlay">
             <div className="hero-content-wrapper">
               <p className="hero-top-text"></p>
@@ -312,7 +297,7 @@ function Services() {
             </div>
             <div className="reviews-split-right">
               <img
-                src="/images/5.jpg"
+                src={`${import.meta.env.BASE_URL}images/5.jpg`}
                 alt="Two happy puppies"
               />
             </div>
@@ -320,89 +305,7 @@ function Services() {
         </div>
       </section>
 
-      {/* Interactive Public Appointment Booking Modal */}
-      <div className={`public-booking-modal-overlay ${modalActive ? "active" : ""}`}>
-        <div className="public-booking-modal-card">
-          <button className="public-booking-close" onClick={closeAppointmentModal}>&times;</button>
-
-          <div className="public-booking-split">
-            {/* Left side Image of Cat and Human finger touching */}
-            <div className="public-booking-img-panel">
-              <img
-                src="/images/6.jpg"
-                alt="Black cat touching finger"
-                style={{ minHeight: "450px" }}
-              />
-            </div>
-
-            {/* Right side Booking Form */}
-            <div className="public-booking-form-panel">
-              <h3>Book an appointment</h3>
-              <form onSubmit={handleFormSubmit}>
-                <div className="row">
-                  <div className="col-md-6 form-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Name"
-                      value={clientName}
-                      onChange={(e) => setClientName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-6 form-group">
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="Email"
-                      value={clientEmail}
-                      onChange={(e) => setClientEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-6 form-group">
-                    <input
-                      type="tel"
-                      className="form-control"
-                      placeholder="Phone"
-                      value={clientPhone}
-                      onChange={(e) => setClientPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-6 form-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={selectedService}
-                      readOnly
-                      required
-                      style={{ minHeight: "48px", backgroundColor: "#f8f9fa", cursor: "not-allowed", color: "#6b7280" }}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <textarea
-                    className="form-control"
-                    rows="3"
-                    placeholder="Your message"
-                    value={clientNotes}
-                    onChange={(e) => setClientNotes(e.target.value)}
-                  ></textarea>
-                </div>
-
-                <button type="submit" className="public-booking-btn-submit mt-3">
-                  Submit
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Interactive Public Appointment Booking Modal (REMOVED: Users now redirected to Dashboard) */}
     </div>
   );
 }

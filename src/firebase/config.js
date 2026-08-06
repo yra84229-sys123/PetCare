@@ -63,7 +63,6 @@ const DB = {
     async logout() {
       await DB._ready();
       await liveAuthFns.signOut(liveAuth);
-      window.location.href = "/login";
     },
 
     async getCurrentUser() {
@@ -91,11 +90,11 @@ const DB = {
       const user = await this.getCurrentUser();
       if (!user) {
         localStorage.removeItem("petcare_logged_in_user");
-        window.location.href = "/login";
+        window.location.href = import.meta.env.BASE_URL + "login";
         return null;
       }
       if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-        window.location.href = user.role === "admin" ? "/admin/dashboard" : "/user/dashboard";
+        window.location.href = user.role === "admin" ? import.meta.env.BASE_URL + "admin/dashboard" : import.meta.env.BASE_URL + "user/dashboard";
         return null;
       }
       document.body.classList.add("session-loaded");
